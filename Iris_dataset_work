@@ -1,0 +1,151 @@
+# %% [markdown]
+#  # **This is notebook to practices the different differnet machine learning algorithm on iris dataset provided in scikit-learn.**
+# 
+
+# %% [markdown]
+# **Requried Imports**
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.555833Z","iopub.execute_input":"2025-12-15T08:04:20.556194Z","iopub.status.idle":"2025-12-15T08:04:20.561006Z","shell.execute_reply.started":"2025-12-15T08:04:20.556173Z","shell.execute_reply":"2025-12-15T08:04:20.559906Z"}}
+from sklearn.datasets import load_iris
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.562575Z","iopub.execute_input":"2025-12-15T08:04:20.562958Z","iopub.status.idle":"2025-12-15T08:04:20.583939Z","shell.execute_reply.started":"2025-12-15T08:04:20.562927Z","shell.execute_reply":"2025-12-15T08:04:20.582947Z"}}
+dataset_iris = load_iris()
+print(type(dataset_iris))
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.584985Z","iopub.execute_input":"2025-12-15T08:04:20.585237Z","iopub.status.idle":"2025-12-15T08:04:20.607341Z","shell.execute_reply.started":"2025-12-15T08:04:20.585215Z","shell.execute_reply":"2025-12-15T08:04:20.606437Z"}}
+dataset_iris
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.609536Z","iopub.execute_input":"2025-12-15T08:04:20.609936Z","iopub.status.idle":"2025-12-15T08:04:20.624711Z","shell.execute_reply.started":"2025-12-15T08:04:20.609906Z","shell.execute_reply":"2025-12-15T08:04:20.623673Z"}}
+target_var = dataset_iris["target"]
+features_var = dataset_iris['data']
+
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.625542Z","iopub.execute_input":"2025-12-15T08:04:20.625769Z","iopub.status.idle":"2025-12-15T08:04:20.647057Z","shell.execute_reply.started":"2025-12-15T08:04:20.625750Z","shell.execute_reply":"2025-12-15T08:04:20.645928Z"}}
+transformer = StandardScaler()
+transforme_data = transformer.fit_transform(features_var)
+transforme_data[0]
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.648215Z","iopub.execute_input":"2025-12-15T08:04:20.648583Z","iopub.status.idle":"2025-12-15T08:04:20.667912Z","shell.execute_reply.started":"2025-12-15T08:04:20.648555Z","shell.execute_reply":"2025-12-15T08:04:20.666918Z"}}
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score,f1_score,confusion_matrix,recall_score,precision_score
+from sklearn.model_selection import train_test_split
+
+classifier_logit= LogisticRegression()
+classifier_logit
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.669021Z","iopub.execute_input":"2025-12-15T08:04:20.669396Z","iopub.status.idle":"2025-12-15T08:04:20.716550Z","shell.execute_reply.started":"2025-12-15T08:04:20.669369Z","shell.execute_reply":"2025-12-15T08:04:20.715568Z"}}
+x_train,x_test,y_train,y_test = train_test_split(features_var,target_var,test_size =0.2)
+classifier_logit.fit(x_train,y_train)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.719086Z","iopub.execute_input":"2025-12-15T08:04:20.719775Z","iopub.status.idle":"2025-12-15T08:04:20.725696Z","shell.execute_reply.started":"2025-12-15T08:04:20.719744Z","shell.execute_reply":"2025-12-15T08:04:20.724920Z"}}
+print("Target Var Shape " ,y_test.shape)
+print("Features VAr Shape",x_test.shape)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.726386Z","iopub.execute_input":"2025-12-15T08:04:20.726725Z","iopub.status.idle":"2025-12-15T08:04:20.751617Z","shell.execute_reply.started":"2025-12-15T08:04:20.726701Z","shell.execute_reply":"2025-12-15T08:04:20.750788Z"}}
+y_pred = classifier_logit.predict(x_test)
+test_score = classifier_logit.score(x_test,y_test)
+train_score = classifier_logit.score(x_train,y_train)
+print("Test Score of Classifier:-",(round(test_score,4))*100)
+print("Train Score of Model:-",(round(train_score,4))*100)
+if train_score>test_score:
+    print("Model is Underestimating By",round((train_score-test_score)*100,3),"%")
+
+elif test_score> train_score:
+    print("Model is Overestimate By",round((test_score-train_score)*100,3),'%')
+
+else:
+    print("Model is Generalize Well.")
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.754335Z","iopub.execute_input":"2025-12-15T08:04:20.754919Z","iopub.status.idle":"2025-12-15T08:04:20.771840Z","shell.execute_reply.started":"2025-12-15T08:04:20.754889Z","shell.execute_reply":"2025-12-15T08:04:20.771120Z"}}
+confusion_metrix = confusion_matrix(y_test,y_pred)
+confusion_metrix
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.772486Z","iopub.execute_input":"2025-12-15T08:04:20.772738Z","iopub.status.idle":"2025-12-15T08:04:20.785984Z","shell.execute_reply.started":"2025-12-15T08:04:20.772715Z","shell.execute_reply":"2025-12-15T08:04:20.785001Z"}}
+import seaborn as sns 
+import matplotlib.pyplot as plt
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:20.789416Z","iopub.execute_input":"2025-12-15T08:04:20.791250Z","iopub.status.idle":"2025-12-15T08:04:21.164196Z","shell.execute_reply.started":"2025-12-15T08:04:20.791214Z","shell.execute_reply":"2025-12-15T08:04:21.163355Z"}}
+plt.figure(figsize=(4,4))
+sns.heatmap(confusion_metrix,annot=True)
+plt.title("Confusion Metrix of True and Predicted Value ",fontweight='bold',color='blue')
+plt.xlabel("True Value",color = 'blue')
+plt.ylabel("Predicted Value",color = 'blue')
+plt.tight_layout()
+plt.savefig("confusion_matrix.pdf")
+plt.show()
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:21.165060Z","iopub.execute_input":"2025-12-15T08:04:21.165323Z","iopub.status.idle":"2025-12-15T08:04:21.170783Z","shell.execute_reply.started":"2025-12-15T08:04:21.165303Z","shell.execute_reply":"2025-12-15T08:04:21.169620Z"}}
+print(type(y_test[0]))
+print(type(y_pred[0]))
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:21.171938Z","iopub.execute_input":"2025-12-15T08:04:21.172204Z","iopub.status.idle":"2025-12-15T08:04:21.200715Z","shell.execute_reply.started":"2025-12-15T08:04:21.172185Z","shell.execute_reply":"2025-12-15T08:04:21.199012Z"}}
+accuracy_score = accuracy_score(y_test,y_pred,average = 'macro')
+f_1_score= f1_score(y_test,y_pred,average = 'macro')
+recall_score=recall_score(y_test,y_pred ,average = 'macro')
+precision_score=precision_score(y_test,y_pred ,average = 'macro')
+print("Accuracy Score:-{} \n F1 Score:-{} \n Recall Score:-{}\n Precision Score:-{}".format(accuracy_socre,f_1_score,recall_score,precision_score))
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:21.201263Z","iopub.status.idle":"2025-12-15T08:04:21.201564Z","shell.execute_reply.started":"2025-12-15T08:04:21.201411Z","shell.execute_reply":"2025-12-15T08:04:21.201425Z"}}
+classifier_logit.predict_proba(x_test)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:21.203006Z","iopub.status.idle":"2025-12-15T08:04:21.203396Z","shell.execute_reply.started":"2025-12-15T08:04:21.203204Z","shell.execute_reply":"2025-12-15T08:04:21.203221Z"}}
+classifier_logit.predict_log_proba(x_test)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:21.204613Z","iopub.status.idle":"2025-12-15T08:04:21.205120Z","shell.execute_reply.started":"2025-12-15T08:04:21.204911Z","shell.execute_reply":"2025-12-15T08:04:21.204930Z"}}
+classifier_logit.get_params()
+
+# %% [code]
+
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:31.314957Z","iopub.execute_input":"2025-12-15T08:04:31.315266Z","iopub.status.idle":"2025-12-15T08:04:31.345766Z","shell.execute_reply.started":"2025-12-15T08:04:31.315246Z","shell.execute_reply":"2025-12-15T08:04:31.344875Z"}}
+from sklearn.tree import DecisionTreeClassifier
+clf_tree = DecisionTreeClassifier()
+clf_tree
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:34.530668Z","iopub.execute_input":"2025-12-15T08:04:34.531026Z","iopub.status.idle":"2025-12-15T08:04:34.540967Z","shell.execute_reply.started":"2025-12-15T08:04:34.531003Z","shell.execute_reply":"2025-12-15T08:04:34.539931Z"}}
+clf_tree.fit(x_train,y_train)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:04:38.110597Z","iopub.execute_input":"2025-12-15T08:04:38.110982Z","iopub.status.idle":"2025-12-15T08:04:38.115700Z","shell.execute_reply.started":"2025-12-15T08:04:38.110957Z","shell.execute_reply":"2025-12-15T08:04:38.114799Z"}}
+y_pred= clf_tree.predict(x_test)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:07:48.561007Z","iopub.execute_input":"2025-12-15T08:07:48.561423Z","iopub.status.idle":"2025-12-15T08:07:48.571332Z","shell.execute_reply.started":"2025-12-15T08:07:48.561392Z","shell.execute_reply":"2025-12-15T08:07:48.570308Z"}}
+test_score_tree = clf_tree.score(x_test,y_test) 
+train_score_tree = clf_tree.score(x_train,y_train)
+print("Test Score:-",test_score_tree)
+print("Train Score:-",train_score_tree)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:11:41.291095Z","iopub.execute_input":"2025-12-15T08:11:41.291427Z","iopub.status.idle":"2025-12-15T08:11:41.298768Z","shell.execute_reply.started":"2025-12-15T08:11:41.291405Z","shell.execute_reply":"2025-12-15T08:11:41.297899Z"}}
+from sklearn.neural_network import MLPClassifier
+
+nn_model = MLPClassifier(hidden_layer_sizes = (50,))
+nn_model
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:12:30.470563Z","iopub.execute_input":"2025-12-15T08:12:30.471199Z","iopub.status.idle":"2025-12-15T08:12:30.580189Z","shell.execute_reply.started":"2025-12-15T08:12:30.471176Z","shell.execute_reply":"2025-12-15T08:12:30.579309Z"}}
+nn_model.fit(x_train,y_train)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:12:59.660650Z","iopub.execute_input":"2025-12-15T08:12:59.661567Z","iopub.status.idle":"2025-12-15T08:12:59.666145Z","shell.execute_reply.started":"2025-12-15T08:12:59.661535Z","shell.execute_reply":"2025-12-15T08:12:59.665278Z"}}
+y_pred  = nn_model.predict(x_test)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:14:33.171151Z","iopub.execute_input":"2025-12-15T08:14:33.172077Z","iopub.status.idle":"2025-12-15T08:14:33.179666Z","shell.execute_reply.started":"2025-12-15T08:14:33.172045Z","shell.execute_reply":"2025-12-15T08:14:33.178739Z"}}
+test_score = nn_model.score(x_test,y_test)
+trian_score= nn_model.score(x_train,y_train)
+print("Train Score:-",train_score,"Test Score:-",test_score)
+
+# %% [code] {"execution":{"iopub.status.busy":"2025-12-15T08:21:16.080480Z","iopub.execute_input":"2025-12-15T08:21:16.081042Z","iopub.status.idle":"2025-12-15T08:21:21.264408Z","shell.execute_reply.started":"2025-12-15T08:21:16.081017Z","shell.execute_reply":"2025-12-15T08:21:21.263379Z"}}
+import torch.nn as nn
+
+nn_model_2= nn.Sequential(nn.Linear(4,50),
+                         nn.ReLU(),
+                         nn.Linear(50,100),
+                        nn.ReLU(),
+                         nn.Linear(100,3))
+nn_model_2
+
+# %% [code]
+
+
+# %% [code]
